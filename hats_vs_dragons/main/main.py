@@ -51,7 +51,7 @@ class MainScreen(GameScreen):
 
     def add_dragons(self, count = 20):
         # FIXME check that randomly generated cell contains None
-        available_dragons = (self.__make_dragon_path("Cruel_Dragon.gif"), self.__make_dragon_path("Doom_Dragon_OW.gif"))
+        available_dragons = (self.__make_dragon_path("Cruel_Dragon.gif"), self.__make_dragon_path("Doom_Dragon_OW.gif"), self.__make_dragon_parg("Bombander.gif"))
 
         for i in range(count):
             dragon_image = random.choice(available_dragons)
