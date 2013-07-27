@@ -21,12 +21,13 @@ class GameChar(object):
         """
         pass
 
-    def turn_trigger(self, board_state):
+    def turn_trigger(self, board_state, location):
         """
         What happens when this piece is triggered for this turn.
         Called after the piece has changed location.
 
         board_state is an instance of grid.
+        location is new coordinates.
         """
         pass
 
@@ -57,10 +58,28 @@ class GunGeek(Geek):
         lhc_image = os.path.join("hats_vs_dragons", "sprites", "other_geeks", "apocalypse.jpg")
         super(GunGeek, self).__init__(hp, damage, lhc_image, location)
     
-    def turn_trigger(self, board_state):    
+    def turn_trigger(self, board_state, location):
         """
         Note: Only HatGeek can trigger gun geeks.
+
+        Hit one, and only one, geek in range.
         """
+        grid = board_state.grid
+        row = self.location[0]
+
+        for col in range(len(grid[row])):
+            if isinstance(grid[row][col], Dragon):
+                dragon = grid[row][col]
+                dragon.hit(damage)
+                return
+
+        col = self.location[1]
+
+        for row in range(len(grid)):    
+            if isinstance(grid[row][col], Dragon):
+                dragon = grid[row][col]
+                dragon.hit(damage)
+                return
 
 
 class Dragon(GameChar):
@@ -94,10 +113,9 @@ class Dragon(GameChar):
                 geek.hit(damage)
                 return
 
-    def turn_trigger(self, board_state):
+    def turn_trigger(self, board_state, location):
         self.hit_geek(board_state.grid)
-        neighbors = board_state.get_adjacent()
-        self.location = random.choice(neighbors)
+        self.location = location
 
 class GameModel(object):
     """
@@ -119,4 +137,6 @@ class GameModel(object):
         For the AI's turn, just trigger all dragons in the board.
         """
         for dragon in self.dragons:
-            dragon.turn_trigger(self.board)
+            dragon_location = dragon.location
+            neighbors = self.board.neighbors(dragon_location[0], dragon_location[1])
+            dragon.turn_trigger(self.board, random.choice(neighbors))
