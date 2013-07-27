@@ -28,7 +28,7 @@ class Grid(Drawable):
 	
 	def __init__(self):
 		super(Drawable, self).__init__()
-		pass
+        self.partition = False
 	
 	@property
 	def x_offset(self):
