@@ -1,3 +1,7 @@
+from components.image import Image
+from components.sprite import PyRoSprite
+
+import os
 import pygame
 import random
 
@@ -7,11 +11,16 @@ The internal behavior of Hat vs Dragons.
 
 # FIXME Hahaha....dragons can't hit dragons, geeks can't hit geeks.
 
-class GameChar(object):
+class GameChar(PyRoSprite):
     
     def __init__(self, hp, damage, image, location):
+        """
+        image is a string filename to the sprite image.
+        """
         self.hp = hp
-        self.image = image
+        # FIXME Redundant self.image?
+        self.image = Image(image)
+        super(GameChar, self).__init__(self.image)
         self.location = location
         self.damage = damage
 
@@ -54,8 +63,8 @@ class GunGeek(Geek):
     """
 
     def __init__(self, hp, damage, image, location):
-        # Whatever happens, we'll load the LHC image.
-        lhc_image = os.path.join("hats_vs_dragons", "sprites", "other_geeks", "apocalypse.jpg")
+        # FIXME Whatever happens, we'll load the LHC image.
+        lhc_image = os.path.join("hats_vs_dragons", "sprites", "other_geeks", "apocalypse_mini.jpg")
         super(GunGeek, self).__init__(hp, damage, lhc_image, location)
     
     def turn_trigger(self, board_state, location):
@@ -126,11 +135,11 @@ class GameModel(object):
         """
         Where grid_size is (width, height)
         """
-        self.board = [[None for i in range(width)] for i in range(height)]
+        self.board = [[None for i in range(grid_size[0])] for i in range(grid_size[1])]
         # Location list of all dragons in the game
         self.dragons = []
         # Location list of all geeks 
-        self.geeks = []
+        self.guns = []
 
     def ai_turn(self):
         """

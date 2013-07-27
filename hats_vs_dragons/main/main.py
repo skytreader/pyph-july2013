@@ -6,9 +6,16 @@ from components.core import GameLoop
 from components.core import GameLoopEvents
 from components.core import GameScreen
 
+from game_model import GameModel
+from game_model import Dragon
+from game_model import HatGeek
+from game_model import GunGeek
+
 from helpers.grid import QuadraticGrid
 
+import os
 import pygame
+import random
 
 class MainScreen(GameScreen):
     
@@ -22,6 +29,44 @@ class MainScreen(GameScreen):
         self.grid_height = grid_size[1]
         self.block_width = screen_size[0] / grid_size[0]
         self.block_height = screen_size[1] / grid_size[1]
+        
+        self.game_model = GameModel(grid_size)
+        self.dragon_group = pygame.sprite.Group()
+        self.gun_group = pygame.sprite.Group()
+
+    def setup(self):
+        self.add_dragons()
+        self.add_guns()
+
+    def __make_dragon_path(self, dragon_image):
+        return os.path.join("hats_vs_dragons", "sprites", "dragons", dragon_image)
+
+    def __make_gun_path(self, gun_image):
+        return os.path.join("hats_vs_dragons", "sprites", "other_geeks", gun_image)
+
+    def add_dragons(self, count = 5):
+        # FIXME check that randomly generated cell contains None
+        available_dragons = (self.__make_dragon_path("Cruel_Dragon.gif"), self.__make_dragon_path("Doom_Dragon_OW.gif"))
+
+        for i in range(count):
+            dragon_image = random.choice(available_dragons)
+            dragon_row = random.choice(range(self.grid_height)) * self.block_height
+            dragon_col = random.choice(range(self.grid_width)) * self.block_width
+            dragon = Dragon(50, 50, dragon_image, (dragon_row, dragon_col))
+            self.dragon_group.add(dragon)
+            self.game_model.dragons.append(dragon)
+
+    def add_guns(self, count = 3):
+        available_guns = (self.__make_gun_path("apocalypse_mini.jpg"),)
+
+        for i in range(count):
+            gun_image = random.choice(available_guns)
+            gun_row = random.choice(range(self.grid_height) * self.block_height)
+            gun_col = random.choice(range(self.grid_width) * self.block_width)
+            # FIXME GunGeek sprite hack
+            gun = GunGeek(50, 50, gun_image, (gun_row, gun_col))
+            self.gun_group.add(gun)
+            self.game_model.guns.append(gun)
 
     def get_rects(self):
         rect_list = []
@@ -40,6 +85,9 @@ class MainScreen(GameScreen):
 
         for r in rects:
             pygame.draw.rect(window, Colors.BLACK, r, 3)
+
+        self.dragon_group.draw(window)
+        self.gun_group.draw(window)
 
 if __name__ == "__main__":
     config = GameConfig()
