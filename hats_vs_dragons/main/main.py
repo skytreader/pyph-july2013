@@ -52,7 +52,7 @@ if __name__ == "__main__":
     config.window_size = (1000, 1000)
     config.window_title = "Hats vs Dragons"
 
-    screen = GameScreen(config.window_size, (10, 10))
+    screen = MainScreen(config.window_size, (10, 10))
     loop_events = GameLoopEvents(config, screen)
     loop = GameLoop(loop_events)
     loop.go()
