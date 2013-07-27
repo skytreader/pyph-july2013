@@ -5,6 +5,8 @@ import random
 The internal behavior of Hat vs Dragons.
 """
 
+# FIXME Hahaha....dragons can't hit dragons, geeks can't hit geeks.
+
 class GameChar(object):
     
     def __init__(self, hp, damage, image, location):
@@ -35,6 +37,31 @@ class Geek(GameChar):
     
     def __init__(self, hp, damage, image, location):
         super(Geek, self).__init__(hp, damage, image, location)
+
+class  HatGeek(Geek):
+    def __init__(self, hp, location):
+        """
+        Hat can have variable HP, and location but fixed 0 damage and
+        fixed image.
+        """
+        image = os.path.join("hats_vs_dragons", "sprites", "blackhat", "blackhat.png")
+        super(HatGeek, self).__init__(hp, 0, image, location)
+
+class GunGeek(Geek):
+    """
+    We can have many guns. But for now we'll just use the LHC for our gun.
+    """
+
+    def __init__(self, hp, damage, image, location):
+        # Whatever happens, we'll load the LHC image.
+        lhc_image = os.path.join("hats_vs_dragons", "sprites", "other_geeks", "apocalypse.jpg")
+        super(GunGeek, self).__init__(hp, damage, lhc_image, location)
+    
+    def turn_trigger(self, board_state):    
+        """
+        Note: Only HatGeek can trigger gun geeks.
+        """
+
 
 class Dragon(GameChar):
     
@@ -73,9 +100,23 @@ class Dragon(GameChar):
         self.location = random.choice(neighbors)
 
 class GameModel(object):
+    """
+    Note that we consider our guns as geeks.
+    """
 
     def __init__(self, grid_size):
         """
         Where grid_size is (width, height)
         """
-        self.grid = [[None for i in range(width)] for i in range(height)]
+        self.board = [[None for i in range(width)] for i in range(height)]
+        # Location list of all dragons in the game
+        self.dragons = []
+        # Location list of all geeks 
+        self.geeks = []
+
+    def ai_turn(self):
+        """
+        For the AI's turn, just trigger all dragons in the board.
+        """
+        for dragon in self.dragons:
+            dragon.turn_trigger(self.board)
