@@ -102,7 +102,7 @@ if __name__ == "__main__":
     config = GameConfig()
     config.clock_rate = 12
     config.window_size = (1357, 708)
-    config.window_title = "Hats vs Dragons"
+    config.window_title = "Hat vs Dragons"
 
     screen = MainScreen(config.window_size, (10, 10))
     loop_events = GameLoopEvents(config, screen)
