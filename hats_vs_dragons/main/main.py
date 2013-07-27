@@ -32,24 +32,19 @@ class MainScreen(GameScreen):
                 upper_left_y = i * self.block_height
                 rect = (upper_left_x, upper_left_y, self.block_width, self.block_height)
                 rect_list.append(rect)
-                
-                if raw_grid[i][j] == ColorBlocksModel.UNTAKEN:
-                    self.color_list.append(Colors.WHITE)
-                else:
-                    color_index = int(raw_grid[i][j])
-                    self.color_list.append(ColorBlocksScreen.COLOR_MAPPING[color_index])
 
         return rect_list
 
     def draw_screen(self, window):
-        """
-        """
-        pass
+        rects = self.get_rects()
+
+        for r in rects:
+            pygame.draw.rect(window, Colors.BLACK, r, 3)
 
 if __name__ == "__main__":
     config = GameConfig()
     config.clock_rate = 12
-    config.window_size = (1000, 1000)
+    config.window_size = (1357, 708)
     config.window_title = "Hats vs Dragons"
 
     screen = MainScreen(config.window_size, (10, 10))
