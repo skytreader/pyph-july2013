@@ -1,5 +1,6 @@
 from components.image import Image
 from components.sprite import PyRoSprite
+from components.shapes import Point
 
 import os
 import pygame
@@ -20,6 +21,7 @@ class GameChar(PyRoSprite):
         self.hp = hp
         # FIXME Redundant self.image?
         self.image = Image(image)
+        self.image.position = Point(location[0], location[1])
         super(GameChar, self).__init__(self.image)
         self.location = location
         self.damage = damage
