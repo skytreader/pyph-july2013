@@ -92,7 +92,7 @@ class MainScreen(GameScreen):
         rects = self.get_rects()
 
         for r in rects:
-            pygame.draw.rect(window, Colors.BLACK, r, 3)
+            pygame.draw.rect(window, Colors.BLACK, r, 1)
 
         self.dragon_group.draw(window)
         self.gun_group.draw(window)
